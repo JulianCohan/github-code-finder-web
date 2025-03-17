@@ -1,5 +1,53 @@
 // Main application code
 document.addEventListener('DOMContentLoaded', function() {
+    // Theme toggling functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const sunIcon = document.querySelector('.theme-icon-sun');
+    const moonIcon = document.querySelector('.theme-icon-moon');
+
+    // Check if user has a theme preference saved
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // Set initial theme based on saved preference or system preference
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.body.classList.add('dark-mode');
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'inline';
+        localStorage.setItem('theme', 'dark');
+    }
+
+    // Toggle theme when button is clicked
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        
+        // Toggle the sun/moon icons
+        if (document.body.classList.contains('dark-mode')) {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'inline';
+            localStorage.setItem('theme', 'dark');
+        } else {
+            sunIcon.style.display = 'inline';
+            moonIcon.style.display = 'none';
+            localStorage.setItem('theme', 'light');
+        }
+    });
+
+    // Listen for OS theme changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (!localStorage.getItem('theme')) { // Only react to OS changes if user hasn't set preference
+            if (e.matches) {
+                document.body.classList.add('dark-mode');
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'inline';
+            } else {
+                document.body.classList.remove('dark-mode');
+                sunIcon.style.display = 'inline';
+                moonIcon.style.display = 'none';
+            }
+        }
+    });
+    
     // Initialize Lucide icons
     lucide.createIcons();
     
@@ -90,11 +138,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Show loading state
         searchButton.disabled = true;
-        searchSpinner.classList.remove('hidden');
-        resultsContainer.innerHTML = '<div class="text-center my-5"><div class="flex justify-center"><i class="icon animate-spin mr-2" data-lucide="loader-2" width="24" height="24"></i></div><h5 class="mt-2">Searching GitHub repositories...</h5></div>';
-        lucide.createIcons();
-        resultsSection.classList.remove('hidden');
-        featureCards.classList.add('hidden');
+        searchSpinner.classList.remove('d-none');
+        resultsContainer.innerHTML = '<div class="text-center my-5"><div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div><h5 class="mt-2">Searching GitHub repositories...</h5></div>';
+        resultsSection.style.display = 'block';
         
         try {
             // Call the Netlify function
@@ -127,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Show save button if user is logged in
             if (window.currentUser) {
-                document.getElementById('saveSearchButton').classList.remove('hidden');
+                document.getElementById('saveSearchButton').style.display = 'inline-block';
             }
         } catch (error) {
             showError('Error connecting to the server. Please try again.');
@@ -135,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } finally {
             // Reset loading state
             searchButton.disabled = false;
-            searchSpinner.classList.add('hidden');
+            searchSpinner.classList.add('d-none');
         }
     }
     
@@ -146,63 +192,44 @@ document.addEventListener('DOMContentLoaded', function() {
         resultsContainer.innerHTML = '';
         
         if (!results || results.length === 0) {
-            resultsContainer.innerHTML = '<div class="bg-blue-100 dark:bg-blue-900 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 rounded-md p-4">No results found. Try modifying your search query.</div>';
+            resultsContainer.innerHTML = '<div class="alert alert-info">No results found. Try modifying your search query.</div>';
             return;
         }
         
         results.forEach((result, index) => {
             const resultCard = document.createElement('div');
-            resultCard.className = 'repo-card';
+            resultCard.className = 'repo-card mb-4';
             
             const header = document.createElement('div');
-            header.className = 'repo-card-header';
+            header.className = 'repo-card-header d-flex justify-content-between align-items-center p-3';
             
             const repoInfo = document.createElement('div');
             repoInfo.innerHTML = `
-                <h5 class="font-bold">
-                    <a href="${result.repo_url}" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline flex items-center">
-                        <i class="icon mr-1" data-lucide="github" width="16" height="16"></i>
-                        ${result.repo_name}
+                <h5 class="mb-0">
+                    <a href="${result.repo_url}" target="_blank" class="text-decoration-none">
+                        <i class="bi bi-github me-1"></i> ${result.repo_name}
                     </a>
                 </h5>
             `;
             
             const scoreInfo = document.createElement('div');
-            scoreInfo.className = 'flex items-center space-x-2';
             scoreInfo.innerHTML = `
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">
-                    <i class="icon mr-1" data-lucide="star" width="12" height="12"></i>
-                    ${result.stars}
-                </span>
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
-                    Score: ${result.match_score.toFixed(2)}
-                </span>
+                <span class="badge bg-warning me-2">⭐ ${result.stars}</span>
+                <span class="badge bg-primary">Score: ${result.match_score.toFixed(2)}</span>
             `;
             
             header.appendChild(repoInfo);
             header.appendChild(scoreInfo);
             
             const body = document.createElement('div');
-            body.className = 'repo-card-body';
+            body.className = 'repo-card-body p-3';
             
             const metadata = document.createElement('div');
-            metadata.className = 'mb-3 text-sm text-gray-500 dark:text-gray-400';
+            metadata.className = 'mb-3 small text-muted';
             metadata.innerHTML = `
-                <p class="mb-1 flex items-center">
-                    <i class="icon mr-1" data-lucide="file-code" width="14" height="14"></i>
-                    <span class="font-medium text-gray-700 dark:text-gray-300">File:</span>
-                    <a href="${result.file_url}" target="_blank" class="ml-1 text-blue-600 dark:text-blue-400 hover:underline overflow-hidden overflow-ellipsis">${result.file_path}</a>
-                </p>
-                <p class="mb-1 flex items-center">
-                    <i class="icon mr-1" data-lucide="code" width="14" height="14"></i>
-                    <span class="font-medium text-gray-700 dark:text-gray-300">Language:</span>
-                    <span class="ml-1">${result.language}</span>
-                </p>
-                <p class="mb-1 flex items-center">
-                    <i class="icon mr-1" data-lucide="calendar" width="14" height="14"></i>
-                    <span class="font-medium text-gray-700 dark:text-gray-300">Last Updated:</span>
-                    <span class="ml-1">${formatDate(result.last_updated)}</span>
-                </p>
+                <p class="mb-1"><strong>File:</strong> <a href="${result.file_url}" target="_blank" class="text-decoration-none file-path">${result.file_path}</a></p>
+                <p class="mb-1"><strong>Language:</strong> ${result.language}</p>
+                <p class="mb-1"><strong>Last Updated:</strong> ${formatDate(result.last_updated)}</p>
             `;
             
             const snippet = document.createElement('div');
@@ -217,8 +244,8 @@ document.addEventListener('DOMContentLoaded', function() {
             snippet.appendChild(pre);
             
             const copyButton = document.createElement('button');
-            copyButton.className = 'copy-btn';
-            copyButton.innerHTML = `<i class="icon mr-1" data-lucide="clipboard" width="14" height="14"></i> Copy Code`;
+            copyButton.className = 'btn btn-sm btn-outline-secondary copy-btn';
+            copyButton.innerHTML = `<i class="bi bi-clipboard"></i> Copy Code`;
             copyButton.onclick = () => copyToClipboard(result.code_snippet, copyButton);
             
             body.appendChild(metadata);
@@ -231,8 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
             resultsContainer.appendChild(resultCard);
         });
         
-        // Initialize icons and syntax highlighting
-        lucide.createIcons();
+        // Initialize syntax highlighting
         hljs.highlightAll();
     }
     
@@ -242,15 +268,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function copyToClipboard(text, button) {
         navigator.clipboard.writeText(text).then(() => {
             const originalHTML = button.innerHTML;
-            button.innerHTML = `<i class="icon mr-1" data-lucide="check" width="14" height="14"></i> Copied!`;
-            button.classList.add('success');
-            
-            lucide.createIcons();
+            button.innerHTML = `<i class="bi bi-check"></i> Copied!`;
+            button.classList.add('btn-success');
             
             setTimeout(() => {
                 button.innerHTML = originalHTML;
-                button.classList.remove('success');
-                lucide.createIcons();
+                button.classList.remove('btn-success');
             }, 2000);
         }).catch(err => {
             console.error('Error copying text: ', err);
@@ -310,6 +333,6 @@ document.addEventListener('DOMContentLoaded', function() {
      * Show error message
      */
     function showError(message) {
-        resultsContainer.innerHTML = `<div class="bg-red-100 dark:bg-red-900 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 p-4 rounded-md">${message}</div>`;
+        resultsContainer.innerHTML = `<div class="alert alert-danger">${message}</div>`;
     }
 });
