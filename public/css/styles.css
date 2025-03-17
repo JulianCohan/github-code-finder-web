@@ -96,7 +96,184 @@ footer {
     }
 }
 
+/* Dark Mode Styles */
+.dark-mode {
+    background-color: #121212;
+    color: #f8f9fa;
+}
+
+.dark-mode .navbar {
+    background-color: #212121 !important;
+}
+
+.dark-mode .card {
+    background-color: #1e1e1e;
+    color: #f8f9fa;
+}
+
+.dark-mode .card-header {
+    background-color: #2c2c2c !important;
+    color: #f8f9fa !important;
+}
+
+.dark-mode .form-control,
+.dark-mode .form-select {
+    background-color: #2c2c2c;
+    border-color: #444;
+    color: #f8f9fa;
+}
+
+.dark-mode .form-label {
+    color: #f8f9fa;
+}
+
+.dark-mode .bg-primary,
+.dark-mode .bg-success,
+.dark-mode .bg-info {
+    background-color: #212121 !important;
+}
+
+.dark-mode code {
+    background-color: #2d2d2d;
+    color: #f8f9fa;
+}
+
+.dark-mode .code-snippet pre {
+    background-color: #2d2d2d;
+}
+
+.dark-mode footer {
+    background-color: #212121 !important;
+}
+
+.dark-mode .modal-content {
+    background-color: #1e1e1e;
+    color: #f8f9fa;
+}
+
+.dark-mode .modal-header,
+.dark-mode .modal-footer {
+    border-color: #444;
+}
+
+.dark-mode .table {
+    color: #f8f9fa;
+}
+
+.dark-mode .alert-info {
+    background-color: #1a3547;
+    border-color: #164b65;
+    color: #c3e6f3;
+}
+
+.dark-mode .btn-outline-light {
+    color: #f8f9fa;
+    border-color: #f8f9fa;
+}
+
+.dark-mode .repo-card {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+}
+
+.dark-mode .repo-card-header {
+    background-color: #2c2c2c;
+}
+
+.dark-mode .btn-close {
+    filter: invert(1);
+}
+
+/* Theme toggle styling */
+#themeToggle {
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.theme-icon-sun, .theme-icon-moon {
+    stroke: rgba(255, 255, 255, 0.85);
+}
+
 /* GitHub Style Syntax Highlighting Modifications */
+.dark-mode .hljs {
+    background-color: #2d2d2d;
+    color: #f8f9fa;
+}
+
+.dark-mode .hljs-comment,
+.dark-mode .hljs-quote {
+    color: #a0a0a0;
+}
+
+.dark-mode .hljs-keyword,
+.dark-mode .hljs-selector-tag,
+.dark-mode .hljs-subst {
+    color: #ff7b72;
+}
+
+.dark-mode .hljs-number,
+.dark-mode .hljs-literal,
+.dark-mode .hljs-variable,
+.dark-mode .hljs-template-variable,
+.dark-mode .hljs-tag .hljs-attr {
+    color: #79c0ff;
+}
+
+.dark-mode .hljs-string,
+.dark-mode .hljs-doctag {
+    color: #a5d6ff;
+}
+
+.dark-mode .hljs-title,
+.dark-mode .hljs-section,
+.dark-mode .hljs-selector-id {
+    color: #d2a8ff;
+}
+
+.dark-mode .hljs-type,
+.dark-mode .hljs-class .hljs-title {
+    color: #d2a8ff;
+}
+
+.dark-mode .hljs-function .hljs-title {
+    color: #d2a8ff;
+}
+
+.dark-mode .hljs-tag,
+.dark-mode .hljs-name,
+.dark-mode .hljs-attribute {
+    color: #7ee787;
+}
+
+.dark-mode .hljs-regexp,
+.dark-mode .hljs-link {
+    color: #a5d6ff;
+}
+
+.dark-mode .hljs-symbol,
+.dark-mode .hljs-bullet {
+    color: #79c0ff;
+}
+
+.dark-mode .hljs-built_in,
+.dark-mode .hljs-builtin-name {
+    color: #d2a8ff;
+}
+
+.dark-mode .hljs-meta {
+    color: #a0a0a0;
+}
+
+.dark-mode .hljs-deletion {
+    background: #553333;
+}
+
+.dark-mode .hljs-addition {
+    background: #334533;
+}
+
 .hljs-comment,
 .hljs-quote {
     color: #6a737d;
