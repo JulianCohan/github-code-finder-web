@@ -9,6 +9,13 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
+# Handle direct API/search requests
+[[redirects]]
+  from = "/api/search"
+  to = "/.netlify/functions/search-code"
+  status = 200
+  force = true
+
 # Handle API routes specifically
 [[redirects]]
   from = "/api/*"
