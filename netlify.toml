@@ -1,34 +1,22 @@
 [build]
-  command = "npm run build"
-  publish = ".next"
+  publish = "public"
+  functions = "netlify/functions"
 
-[build.environment]
-  # Enable the Next.js Runtime
-  NETLIFY_NEXT_PLUGIN_SKIP = "false"
-
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
-
-# Handle direct API/search requests
+# Handle API/search requests
 [[redirects]]
   from = "/api/search"
   to = "/.netlify/functions/search-code"
   status = 200
-  force = true
 
-# Handle API routes specifically
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/nextjs-server-edge"
+  from = "/.netlify/functions/*"
+  to = "/.netlify/functions/:splat"
   status = 200
-  force = true
 
-# This single redirect handles all other routes properly for Next.js
 [[redirects]]
   from = "/*"
-  to = "/.netlify/functions/nextjs-server-edge"
+  to = "/index.html"
   status = 200
-  force = true
 
 # Enforce HTTPS
 [[redirects]]
