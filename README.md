@@ -2,8 +2,6 @@
 
 A powerful web application to search through GitHub repositories for specific code snippets, functions, or patterns. Find the best implementations of algorithms, utility functions, or coding patterns across open-source projects.
 
-![GitHub Code Finder Screenshot](https://via.placeholder.com/800x400?text=GitHub+Code+Finder)
-
 ## Features
 
 - **Advanced Code Search**: Search for specific functions, classes, or patterns across GitHub repositories
