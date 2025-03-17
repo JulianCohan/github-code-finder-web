@@ -1,16 +1,27 @@
 [build]
-  # Directory to publish (relative to root of your repo)
-  publish = "public"
-  # Default build command
-  command = "npm install"
-  # Directory with Netlify Functions
-  functions = "netlify/functions"
+  command = "npm run build"
+  publish = ".next"
 
-# Redirect all API calls to serverless functions
+[build.environment]
+  # Enable the Next.js Runtime
+  NETLIFY_NEXT_PLUGIN_SKIP = "false"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Handle API routes specifically
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  to = "/.netlify/functions/nextjs-server-edge"
   status = 200
+  force = true
+
+# This single redirect handles all other routes properly for Next.js
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/nextjs-server-edge"
+  status = 200
+  force = true
 
 # Enforce HTTPS
 [[redirects]]
@@ -18,12 +29,6 @@
   to = "https://:splat"
   status = 301
   force = true
-
-# Handle single-page application routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
 
 # Set security headers
 [[headers]]
@@ -33,4 +38,3 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.gstatic.com https://cdnjs.cloudflare.com 'unsafe-inline'; style-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com 'unsafe-inline'; connect-src 'self' https://api.github.com https://*.supabase.co; img-src 'self' data:;"
