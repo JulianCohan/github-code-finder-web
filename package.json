@@ -1,0 +1,27 @@
+{
+  "name": "github-code-finder",
+  "version": "1.0.0",
+  "description": "A tool to search for code patterns across GitHub repositories",
+  "main": "index.js",
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'No build step needed for static site'"
+  },
+  "keywords": [
+    "github",
+    "code",
+    "search",
+    "netlify",
+    "firebase",
+    "supabase"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@octokit/rest": "^19.0.7",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "netlify-cli": "^15.0.0"
+  }
+}
