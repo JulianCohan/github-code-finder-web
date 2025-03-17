@@ -35,7 +35,7 @@ A powerful web application to search through GitHub repositories for specific co
 
 1. Clone this repository:
    ```
-   git clone https://github.com/yourusername/github-code-finder.git
+   git clone https://github.com/JulianCohan/github-code-finder.git
    cd github-code-finder
    ```
 
