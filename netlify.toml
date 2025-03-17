@@ -2,17 +2,21 @@
   publish = "public"
   functions = "netlify/functions"
 
+[build.environment]
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
+
+[dev]
+  publish = "public"
+  functions = "netlify/functions"
+  port = 8888
+
 # Handle API/search requests
 [[redirects]]
   from = "/api/search"
   to = "/.netlify/functions/search-code"
   status = 200
 
-[[redirects]]
-  from = "/.netlify/functions/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-
+# SPA fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"
