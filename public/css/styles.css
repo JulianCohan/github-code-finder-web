@@ -1,4 +1,4 @@
-/* Main Styles for GitHub Code Finder */
+/* Main Styles for GitHub Repo Finder */
 
 :root {
     /* Light Theme Variables */
@@ -154,6 +154,30 @@ header {
 .form-control-lg {
     font-size: 1.1rem;
     padding: 0.8rem 1.2rem;
+}
+
+/* Search Input Group */
+.input-group .input-group-text {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--text-color);
+    border-left: none;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.dark-mode .input-group .input-group-text {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+}
+
+.input-group .form-control:focus + .input-group-text {
+    border-color: var(--primary-color);
+}
+
+.input-group .bi-search {
+    color: var(--text-color);
+    opacity: 0.6;
 }
 
 /* Button Styles */
