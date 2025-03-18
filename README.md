@@ -33,8 +33,8 @@ A powerful web application to search through GitHub repositories for specific co
 
 1. Clone this repository:
    ```
-   git clone https://github.com/JulianCohan/github-code-finder.git
-   cd github-code-finder
+   git clone https://github.com/JulianCohan/github-repo-finder.git
+   cd github-repo-finder
    ```
 
 2. Install dependencies:
