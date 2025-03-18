@@ -1,4 +1,4 @@
-# GitHub Code Finder
+# GitHub Repo Finder
 
 A powerful web application to search through GitHub repositories for specific code snippets, functions, or patterns. Find the best implementations of algorithms, utility functions, or coding patterns across open-source projects.
 
