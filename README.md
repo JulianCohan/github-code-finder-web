@@ -16,7 +16,6 @@ A powerful web application to search through GitHub repositories for specific co
 ## Technology Stack
 
 - **Frontend**: HTML, CSS, JavaScript
-- **Authentication**: [Supabase](https://supabase.com/)
 - **Database**: [Firebase Firestore](https://firebase.google.com/products/firestore)
 - **Hosting/Functions**: [Netlify](https://www.netlify.com/)
 - **API Integration**: GitHub API via Octokit
@@ -28,7 +27,6 @@ A powerful web application to search through GitHub repositories for specific co
 - GitHub account
 - Netlify account
 - Firebase account
-- Supabase account
 - GitHub Personal Access Token
 
 ### Local Development
@@ -71,11 +69,6 @@ A powerful web application to search through GitHub repositories for specific co
    - Create a new Firebase project
    - Set up Firestore database
    - Add your Firebase configuration to `public/js/firebase.js`
-
-4. Configure Supabase:
-   - Create a new Supabase project
-   - Set up authentication
-   - Add your Supabase configuration to `public/js/auth.js`
 
 ## Usage Examples
 
