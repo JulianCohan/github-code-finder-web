@@ -157,27 +157,31 @@ header {
 }
 
 /* Search Input Group */
-.input-group .input-group-text {
-    background-color: var(--input-bg);
-    border-color: var(--input-border);
-    color: var(--text-color);
-    border-left: none;
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
-
-.dark-mode .input-group .input-group-text {
-    background-color: var(--input-bg);
-    border-color: var(--input-border);
-}
-
-.input-group .form-control:focus + .input-group-text {
+.input-group .search-btn {
+    background-color: var(--primary-color);
     border-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    border-left: none;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    transition: all 0.2s ease;
 }
 
-.input-group .bi-search {
-    color: var(--text-color);
-    opacity: 0.6;
+.input-group .search-btn:hover {
+    opacity: 0.9;
+}
+
+.input-group .search-btn:active {
+    transform: translateY(1px);
+}
+
+.input-group .search-btn .bi-search {
+    color: white;
+}
+
+.input-group .form-control:focus + .search-btn {
+    border-color: var(--primary-color);
 }
 
 /* Button Styles */
