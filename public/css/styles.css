@@ -336,15 +336,36 @@ footer {
     border: none;
     color: var(--text-color);
     cursor: pointer;
-    padding: 0.5rem;
+    padding: 0.6rem;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-right: 1rem;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.theme-toggle:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dark-mode .theme-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .theme-icon-sun, .theme-icon-moon {
     stroke: var(--text-color);
+    stroke-width: 2px;
+    width: 22px;
+    height: 22px;
+}
+
+.theme-icon-sun {
+    color: #f59e0b;
+}
+
+.theme-icon-moon {
+    color: #6366f1;
 }
 
 /* Responsive Adjustments */
