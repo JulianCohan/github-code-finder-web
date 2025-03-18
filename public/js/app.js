@@ -13,8 +13,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
         document.body.classList.add('dark-mode');
         sunIcon.style.display = 'none';
-        moonIcon.style.display = 'inline';
+        moonIcon.style.display = 'block'; // Changed from 'inline' to 'block' for better visibility
         localStorage.setItem('theme', 'dark');
+    } else {
+        // Ensure light mode is properly set
+        document.body.classList.remove('dark-mode');
+        sunIcon.style.display = 'block'; // Changed from 'inline' to 'block' for better visibility
+        moonIcon.style.display = 'none';
+        localStorage.setItem('theme', 'light');
     }
 
     // Toggle theme when button is clicked
@@ -24,10 +30,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Toggle the sun/moon icons
         if (document.body.classList.contains('dark-mode')) {
             sunIcon.style.display = 'none';
-            moonIcon.style.display = 'inline';
+            moonIcon.style.display = 'block'; // Changed from 'inline' to 'block'
             localStorage.setItem('theme', 'dark');
         } else {
-            sunIcon.style.display = 'inline';
+            sunIcon.style.display = 'block'; // Changed from 'inline' to 'block'
             moonIcon.style.display = 'none';
             localStorage.setItem('theme', 'light');
         }
@@ -39,10 +45,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.matches) {
                 document.body.classList.add('dark-mode');
                 sunIcon.style.display = 'none';
-                moonIcon.style.display = 'inline';
+                moonIcon.style.display = 'block'; // Changed from 'inline' to 'block'
             } else {
                 document.body.classList.remove('dark-mode');
-                sunIcon.style.display = 'inline';
+                sunIcon.style.display = 'block'; // Changed from 'inline' to 'block'
                 moonIcon.style.display = 'none';
             }
         }
