@@ -14,43 +14,145 @@
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <header>
         <div class="container">
-            <a class="navbar-brand" href="/">GitHub Code Finder</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" id="themeToggle">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon-sun"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon-moon" style="display: none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                        </a>
-                    </li>
-                    <li class="nav-item" id="loginButton">
-                        <a class="nav-link" href="#">Log In</a>
-                    </li>
-                    <li class="nav-item" id="signupButton">
-                        <a class="nav-link" href="#">Sign Up</a>
-                    </li>
-                    <li class="nav-item" id="logoutButton" style="display: none;">
-                        <a class="nav-link" href="#">Log Out</a>
-                    </li>
-                    <li class="nav-item" id="savedSearchesButton" style="display: none;">
-                        <a class="nav-link" href="#">My Saved Searches</a>
-                    </li>
-                </ul>
+            <nav class="navbar navbar-expand-lg">
+                <a class="navbar-brand" href="/"><span class="code-icon">&lt;/&gt;</span> GitHub Code Finder</a>
+                <div class="navbar-collapse justify-content-end">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon-sun"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon-moon" style="display: none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">GitHub Search</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="loginButton">Sign In</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mt-5">
+        <div class="hero-section text-center">
+            <h1 class="display-4 mb-4">
+                <span class="text-primary">Search GitHub Code</span><br>
+                <span class="text-primary">Like a Pro Developer</span>
+            </h1>
+            <p class="lead mb-5">
+                Find exact code patterns, examples, and implementations across millions of<br> 
+                repositories with our advanced search engine powered by the GitHub API.
+            </p>
+        </div>
+
+        <div class="search-container">
+            <div class="card search-card">
+                <div class="card-body">
+                    <form id="searchForm">
+                        <div class="mb-4">
+                            <label for="query" class="form-label">Search Query</label>
+                            <input type="text" class="form-control form-control-lg" id="query" placeholder="Search code... (e.g., 'useState in React')">
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="language" class="form-label">Language</label>
+                                <select class="form-select" id="language">
+                                    <option value="">Any Language</option>
+                                    <!-- Languages will be populated from API -->
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="maxResults" class="form-label">Max Results</label>
+                                <select class="form-select" id="maxResults">
+                                    <option value="5">5</option>
+                                    <option value="10" selected>10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="minStars" class="form-label">Min Repository Stars</label>
+                                <input type="number" class="form-control" id="minStars" value="0" min="0">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="contextLines" class="form-label">Context Lines</label>
+                                <input type="number" class="form-control" id="contextLines" value="5" min="1" max="20">
+                            </div>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg" id="searchButton">
+                                <span class="spinner-border spinner-border-sm d-none" id="searchSpinner" role="status" aria-hidden="true"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search me-2" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                </svg>
+                                Search GitHub Code
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </nav>
+
+        <div class="results-section mt-4" id="resultsSection" style="display: none;">
+            <div class="card results-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Search Results</h4>
+                    <button class="btn btn-outline-primary" id="exportButton">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download me-1" viewBox="0 0 16 16">
+                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                        </svg>
+                        Export
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div id="resultsContainer"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tips-section mt-5">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Tips and Information</h4>
+                    
+                    <h5>Search Syntax Examples:</h5>
+                    <ul>
+                        <li><code>def main()</code> - Find Python main functions</li>
+                        <li><code>binary search implementation</code> - Search for binary search algorithms</li>
+                        <li><code>useState hook</code> - Find React useState hook usage</li>
+                    </ul>
+                    
+                    <h5>Features:</h5>
+                    <ul>
+                        <li><strong>Create an account</strong> to save your favorite searches</li>
+                        <li><strong>Export results</strong> to text files for later reference</li>
+                        <li><strong>Filter by language</strong> to find the most relevant code</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="mt-5 py-4">
+        <div class="container text-center">
+            <p class="mb-0">GitHub Code Finder &copy; 2025 | Powered by GitHub API</p>
+        </div>
+    </footer>
 
     <!-- Auth Modal -->
     <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="authModalTitle">Log In</h5>
+                    <h5 class="modal-title" id="authModalTitle">Sign In</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -68,7 +170,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="authSubmitButton">Log In</button>
+                    <button type="button" class="btn btn-primary" id="authSubmitButton">Sign In</button>
                 </div>
             </div>
         </div>
@@ -105,105 +207,6 @@
             </div>
         </div>
     </div>
-
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-12 mb-4">
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">Search GitHub Code</h4>
-                    </div>
-                    <div class="card-body">
-                        <form id="searchForm">
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label for="query" class="form-label">Search Query</label>
-                                    <input type="text" class="form-control" id="query" placeholder="e.g., 'def main()' or 'function factorial'" required>
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="language" class="form-label">Language</label>
-                                    <select class="form-select" id="language">
-                                        <option value="">Any Language</option>
-                                        <!-- Languages will be populated from API -->
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="maxResults" class="form-label">Max Results</label>
-                                    <select class="form-select" id="maxResults">
-                                        <option value="5">5</option>
-                                        <option value="10" selected>10</option>
-                                        <option value="20">20</option>
-                                        <option value="30">30</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="minStars" class="form-label">Min Repository Stars</label>
-                                    <input type="number" class="form-control" id="minStars" value="0" min="0">
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="contextLines" class="form-label">Context Lines</label>
-                                    <input type="number" class="form-control" id="contextLines" value="5" min="1" max="20">
-                                </div>
-                                <div class="col-md-4 d-flex align-items-end">
-                                    <button type="submit" class="btn btn-primary w-100" id="searchButton">
-                                        <span class="spinner-border spinner-border-sm d-none" id="searchSpinner" role="status" aria-hidden="true"></span>
-                                        Search Code
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row" id="resultsSection" style="display: none;">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-                        <h4 class="mb-0">Search Results</h4>
-                        <div>
-                            <button class="btn btn-sm btn-light me-2" id="saveSearchButton" style="display: none;">Save Search</button>
-                            <button class="btn btn-sm btn-outline-light" id="exportButton">Export Results</button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div id="resultsContainer"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header bg-info text-white">
-                        <h4 class="mb-0">Tips and Information</h4>
-                    </div>
-                    <div class="card-body">
-                        <h5>Search Syntax Examples:</h5>
-                        <ul>
-                            <li><code>def main()</code> - Find Python main functions</li>
-                            <li><code>binary search implementation</code> - Search for binary search algorithms</li>
-                            <li><code>useState hook</code> - Find React useState hook usage</li>
-                        </ul>
-                        <h5>Features:</h5>
-                        <ul>
-                            <li><strong>Create an account</strong> to save your favorite searches</li>
-                            <li><strong>Export results</strong> to text files for later reference</li>
-                            <li><strong>Filter by language</strong> to find the most relevant code</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <footer class="bg-dark text-white mt-5 py-3">
-        <div class="container text-center">
-            <p class="mb-0">GitHub Code Finder &copy; 2025 | Powered by GitHub API</p>
-        </div>
-    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
