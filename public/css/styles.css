@@ -15,6 +15,8 @@
     --modal-bg: #ffffff;
     --search-card-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
     --results-header-bg: #f8f9fa;
+    --feature-title-color: #333333;
+    --feature-text-color: #6c757d;
 }
 
 .dark-mode {
@@ -32,6 +34,8 @@
     --modal-bg: #1e1e1e;
     --search-card-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
     --results-header-bg: #2c2c2c;
+    --feature-title-color: #ffffff;
+    --feature-text-color: #e0e0e0;
 }
 
 body {
@@ -259,13 +263,17 @@ header {
 .feature-card h4 {
     font-weight: 600;
     margin-bottom: 0.75rem;
-    color: var(--text-color);
+    color: var(--feature-title-color);
 }
 
 .feature-card p {
-    color: var(--text-color);
-    opacity: 0.8;
+    color: var(--feature-text-color);
+    opacity: 0.95;
     margin-bottom: 0;
+}
+
+.dark-mode .text-muted {
+    color: var(--feature-text-color) !important;
 }
 
 /* Repository Card */
