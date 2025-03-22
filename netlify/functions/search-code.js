@@ -1,5 +1,7 @@
 // netlify/functions/search-code.js
-// Mock function for search to avoid needing a GitHub API token
+require('dotenv').config();
+const { Octokit } = require("@octokit/rest");
+const { searchAndProcessCode } = require('../../src/github_code_finder.js');
 
 // Serverless function handler
 exports.handler = async (event, context) => {
@@ -31,10 +33,32 @@ exports.handler = async (event, context) => {
 
   try {
     // Parse request body
-    const requestBody = JSON.parse(event.body);
+    if (!event.body) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Request body is required' })
+      };
+    }
+    
+    // Safely parse JSON with error handling
+    let requestBody;
+    try {
+      requestBody = JSON.parse(event.body);
+    } catch (parseError) {
+      console.error('JSON parsing error:', parseError);
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Invalid JSON in request body', details: parseError.message })
+      };
+    }
+    
     const query = requestBody.query;
-    const language = requestBody.language || '';
+    const language = requestBody.language;
     const maxResults = requestBody.max_results || 10;
+    const minStars = requestBody.min_stars || 0;
+    const contextLines = requestBody.context_lines || 5;
 
     // Validate required parameters
     if (!query) {
@@ -45,39 +69,132 @@ exports.handler = async (event, context) => {
       };
     }
 
-    console.log(`Mock search for: ${query} in language: ${language}`);
-    
-    // Generate mock results based on the query
-    const results = generateMockResults(query, language, maxResults);
+    console.log(`Searching for: ${query} in ${language || 'any language'}, minStars: ${minStars}`);
 
-    // Return results
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({ results })
-    };
+    // Get GitHub token from environment variables
+    let githubToken = process.env.GITHUB_TOKEN || process.env.GITHUB_ACCESS_TOKEN;
+    
+    if (!githubToken) {
+      console.log('GitHub token not found in environment variables');
+      // Fall back to mock data in development mode or if token is missing
+      if (process.env.NODE_ENV === 'development' || !githubToken) {
+        console.log('Using mock data as fallback');
+        const mockResults = generateMockResults(query, language, maxResults);
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify({ 
+            results: mockResults,
+            meta: {
+              mode: 'mock',
+              query,
+              language: language || 'any',
+              resultsCount: mockResults.length,
+              searchTime: new Date().toISOString()
+            }
+          })
+        };
+      } else {
+        return {
+          statusCode: 401,
+          headers,
+          body: JSON.stringify({ 
+            error: 'GitHub token not configured',
+            details: 'Please set GITHUB_TOKEN in environment variables.'
+          })
+        };
+      }
+    }
+    
+    // Initialize Octokit with GitHub token 
+    const octokit = new Octokit({
+      auth: githubToken
+    });
+
+    try {
+      // Process the search using our GitHub code finder
+      const results = await searchAndProcessCode(
+        octokit,
+        query,
+        language,
+        maxResults,
+        contextLines,
+        minStars
+      );
+
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ 
+          results,
+          meta: {
+            mode: 'live',
+            query,
+            language: language || 'any',
+            resultsCount: results.length,
+            searchTime: new Date().toISOString()
+          }
+        })
+      };
+    } catch (searchError) {
+      console.error('Search processing error:', searchError);
+      
+      // Check if it's a rate limit error
+      if (searchError.message && searchError.message.includes('rate limit')) {
+        return {
+          statusCode: 429,
+          headers,
+          body: JSON.stringify({ 
+            error: 'GitHub API rate limit exceeded', 
+            details: 'Please try again later or configure a GitHub token with higher rate limits.',
+            message: searchError.message
+          })
+        };
+      }
+      
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ 
+          error: 'Error processing GitHub search', 
+          details: searchError.message
+        })
+      };
+    }
   } catch (error) {
-    console.error('Error processing request:', error);
+    console.error('Unhandled error:', error);
+    
+    // Return user-friendly error message
+    let errorMessage = 'Internal Server Error';
+    let errorDetails = error.message;
+    
+    if (error.message && error.message.includes('rate limit exceeded')) {
+      errorMessage = 'GitHub API rate limit exceeded. Please try again later.';
+    } else if (error.message && error.message.includes('validation failed')) {
+      errorMessage = 'Invalid search query. Please check your search parameters.';
+    }
 
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({ 
-        error: 'Internal Server Error', 
-        message: error.message 
+        error: errorMessage, 
+        details: errorDetails,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
       })
     };
   }
 };
 
 /**
- * Generate mock search results
+ * Generate mock search results - used as fallback when GitHub token is not available
+ * This allows new developers to see the UI functioning without needing to set up a token right away
  */
 function generateMockResults(query, language, maxResults) {
   const results = [];
   
   // Clean the query for better mock results
-  const cleanQuery = query.toLowerCase().replace(/[^\w\s]/g, '');
+  const cleanQuery = query.toLowerCase().replace(/[^\\w\\s]/g, '');
   
   // Generate a deterministic but seemingly random number based on a string
   const hashCode = str => {
@@ -134,7 +251,7 @@ function generateMockResults(query, language, maxResults) {
   const getLanguageCode = (lang, query) => {
     const samples = {
       'python': `# Implementation of ${query}
-def ${query.replace(/\s+/g, '_')}(param1, param2=None):
+def ${query.replace(/\\s+/g, '_')}(param1, param2=None):
     """
     This function implements the ${query} algorithm.
     
@@ -158,7 +275,7 @@ def ${query.replace(/\s+/g, '_')}(param1, param2=None):
  * @param {Object} options - Configuration options
  * @returns {Array} - Result array
  */
-function ${query.replace(/\s+/g, '')}(options = {}) {
+function ${query.replace(/\\s+/g, '')}(options = {}) {
   const { param1 = 10, param2 = 20 } = options;
   const results = [];
   
@@ -176,11 +293,11 @@ function ${query.replace(/\s+/g, '')}(options = {}) {
       'java': `/**
  * Implementation of ${query}
  */
-public class ${query.replace(/\s+/g, '')} {
+public class ${query.replace(/\\s+/g, '')} {
     private final int param1;
     private final int param2;
     
-    public ${query.replace(/\s+/g, '')}(int param1, int param2) {
+    public ${query.replace(/\\s+/g, '')}(int param1, int param2) {
         this.param1 = param1;
         this.param2 = param2;
     }
@@ -206,7 +323,7 @@ public class ${query.replace(/\s+/g, '')} {
     
     // Determine file path based on query and language
     const ext = getExtension(language || 'javascript');
-    const fileName = `${cleanQuery.replace(/\s+/g, '_')}_${(seed + i) % 100}.${ext}`;
+    const fileName = `${cleanQuery.replace(/\\s+/g, '_')}_${(seed + i) % 100}.${ext}`;
     const filePath = language 
       ? `src/${language}/${fileName}`
       : `src/main/${fileName}`;
