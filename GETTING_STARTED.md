@@ -58,7 +58,7 @@ To get a GitHub token:
 4. Select these scopes: `public_repo` and `read:packages`
 5. Click "Generate token" and copy it
 
-> **Note**: Without a GitHub token, the app will still work but will use mock data instead of real GitHub results.
+**Note**: A GitHub token is required for the application to function properly.
 
 ### 5. Set Up Firebase (Optional)
 
@@ -115,13 +115,6 @@ If you're new to programming, here's a suggested learning path through this code
 3. **API Integration**: Study how `search-code.js` connects to the GitHub API
 4. **Authentication**: Understand how user login works in `auth.js`
 5. **Database**: See how data is stored and retrieved in `firebase.js`
-
-## Running in Mock Mode
-
-If you don't have a GitHub token yet, or want to test without using API limits:
-
-- The app will automatically use mock data if no GitHub token is provided
-- This is perfect for learning how the app works without worrying about API limits
 
 ## Troubleshooting
 
