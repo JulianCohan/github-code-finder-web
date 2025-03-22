@@ -2,8 +2,6 @@
 
 A powerful web application to search through GitHub repositories for specific code snippets, functions, or patterns. Find the best implementations of algorithms, utility functions, or coding patterns across open-source projects.
 
-![GitHub Repo Finder Screenshot](docs/screenshots/screenshot.png)
-
 ## Project Overview
 
 GitHub Repo Finder is a specialized search tool designed for developers who want to discover high-quality code examples, patterns, or implementations across GitHub's vast ecosystem of repositories. Unlike GitHub's built-in search, our application provides:
